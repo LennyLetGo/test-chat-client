@@ -52,7 +52,7 @@ const App = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Lenny (Bed)rooms</h1>
+      <h1>Lenny Business</h1>
 
       {!isUsernameSet ? (
         <div>
@@ -67,7 +67,7 @@ const App = () => {
       ) : (
         <>
           <p>
-            Welcome, <strong>{username}</strong>! Enjoy the pillow talk
+            Welcome, <strong>{username}</strong>! Let's align on your overall goals.
           </p>
           <RoomSelector socket={socketRef.current} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
           <Chat socket={socketRef.current} currentRoom={currentRoom} />

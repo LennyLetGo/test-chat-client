@@ -27,8 +27,8 @@ const RoomSelector = ({ socket, currentRoom, setCurrentRoom }) => {
 
   return (
     <div>
-      <button onClick={() => joinRoom('master')}>Join Master Room</button>
-      <button onClick={() => joinRoom('guest')}>Join Guest Room</button>
+      <button onClick={() => joinRoom('master')}>Enter Conference Room 1</button>
+      <button onClick={() => joinRoom('guest')}>Enter Bathroom</button>
       <button onClick={leaveRoom}>Leave Room</button>
     </div>
   );
