@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import RoomSelector from './components/RoomSelector';
 import Chat from './components/Chat';
 
-const socket = io('https://my-app-id.region.r.appspot.com');
+const socket = io('wss://my-app-id.region.r.appspot.com');
 
 const App = () => {
   const [currentRoom, setCurrentRoom] = useState(null);
