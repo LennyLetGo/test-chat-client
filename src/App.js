@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import RoomSelector from './components/RoomSelector';
 import Chat from './components/Chat';
 
-const socket = io('http://localhost:5000');
+const socket = io('http://3.147.54.72:5000');
 
 const App = () => {
   const [currentRoom, setCurrentRoom] = useState(null);
