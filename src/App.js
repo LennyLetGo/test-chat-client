@@ -3,7 +3,7 @@ import RoomSelector from './components/RoomSelector';
 import Chat from './components/Chat';
 
 // Initialize WebSocket connection
-const ws = new WebSocket('wss://lenny-rooms.uk.r.appspot.com');
+const ws = new WebSocket('wss://lenny-rooms.uk.r.appspot.com:5000');
 const App = () => {
   const [socket, setSocket] = useState(null); // Store WebSocket instance
   const [currentRoom, setCurrentRoom] = useState(null);
