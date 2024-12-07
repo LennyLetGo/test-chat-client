@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import RoomSelector from './components/RoomSelector';
 import Chat from './components/Chat';
 
-const socket = io('https://lenny-rooms.uk.r.appspot.com:65080');
+const socket = io('http://142.251.32.116:443');
 
 const App = () => {
   const [currentRoom, setCurrentRoom] = useState(null);
