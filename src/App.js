@@ -1,18 +1,49 @@
-import React, { useState } from 'react';
-import io from 'socket.io-client';
+import React, { useState, useEffect, useRef } from 'react';
 import RoomSelector from './components/RoomSelector';
 import Chat from './components/Chat';
 
-const socket = io('https://142.251.32.116:443');
-
+// Initialize WebSocket connection
+const ws = new WebSocket('wss://lenny-rooms.uk.r.appspot.com');
 const App = () => {
+  const [socket, setSocket] = useState(null); // Store WebSocket instance
   const [currentRoom, setCurrentRoom] = useState(null);
   const [username, setUsername] = useState('');
   const [isUsernameSet, setIsUsernameSet] = useState(false);
 
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    socketRef.current = ws;
+
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    ws.onclose = () => {
+      console.log('Disconnected from WebSocket server');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('Message from server:', message);
+    };
+
+    setSocket(ws);
+
+    // Cleanup on unmount
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   const handleSetUsername = () => {
     if (username.trim()) {
-      socket.emit('set username', username);
+      const message = JSON.stringify({ type: 'set username', payload: username });
+      socketRef.current.send(message); // Send username to the server
       setIsUsernameSet(true);
     } else {
       alert('Please enter a valid username.');
@@ -35,9 +66,11 @@ const App = () => {
         </div>
       ) : (
         <>
-          <p>Welcome, <strong>{username}</strong>! Enjoy the pillow talk</p>
-          <RoomSelector socket={socket} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
-          <Chat socket={socket} currentRoom={currentRoom} />
+          <p>
+            Welcome, <strong>{username}</strong>! Enjoy the pillow talk
+          </p>
+          <RoomSelector socket={socketRef.current} currentRoom={currentRoom} setCurrentRoom={setCurrentRoom} />
+          <Chat socket={socketRef.current} currentRoom={currentRoom} />
         </>
       )}
     </div>

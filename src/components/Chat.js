@@ -1,26 +1,34 @@
-// src/components/Chat.js
 import React, { useState, useEffect } from 'react';
-
 
 const Chat = ({ socket, currentRoom }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
   useEffect(() => {
-    // Listen for messages
-    socket.on('message', (message) => {
-        console.log('MESSAGE')
-        setMessages((prev) => [...prev, message]);
-    });
-
-    return () => {
-      socket.off('message');
+    // Listen for messages from WebSocket
+    const handleMessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'message') {
+        setMessages((prev) => [...prev, message.message]);
+      }
     };
-  }, []);
+
+    // Add event listener for incoming messages
+    socket.addEventListener('message', handleMessage);
+
+    // Cleanup listener on unmount
+    return () => {
+      socket.removeEventListener('message', handleMessage);
+    };
+  }, [socket]);
 
   const sendMessage = () => {
     if (input.trim() && currentRoom) {
-      socket.emit('send message', { room: currentRoom, message: input });
+      const message = JSON.stringify({
+        type: 'send message',
+        payload: { room: currentRoom, message: input },
+      });
+      socket.send(message);
       setInput('');
     }
   };
@@ -28,7 +36,15 @@ const Chat = ({ socket, currentRoom }) => {
   return (
     <div>
       <h2>Room: {currentRoom || 'None'}</h2>
-      <div style={{ border: '1px solid #ccc', height: '200px', overflowY: 'scroll', padding: '10px', marginBottom: '10px' }}>
+      <div
+        style={{
+          border: '1px solid #ccc',
+          height: '200px',
+          overflowY: 'scroll',
+          padding: '10px',
+          marginBottom: '10px',
+        }}
+      >
         {messages.map((msg, index) => (
           <div key={index}>{msg}</div>
         ))}

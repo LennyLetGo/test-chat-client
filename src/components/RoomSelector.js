@@ -1,6 +1,4 @@
-// src/components/RoomSelector.js
 import React from 'react';
-
 
 const RoomSelector = ({ socket, currentRoom, setCurrentRoom }) => {
   const joinRoom = (room) => {
@@ -8,7 +6,10 @@ const RoomSelector = ({ socket, currentRoom, setCurrentRoom }) => {
       alert(`Leave the current room (${currentRoom}) before joining another.`);
       return;
     }
-    socket.emit('join room', room);
+
+    // Send a message to join the room
+    const message = JSON.stringify({ type: 'join room', payload: room });
+    socket.send(message);
     setCurrentRoom(room);
   };
 
@@ -17,7 +18,10 @@ const RoomSelector = ({ socket, currentRoom, setCurrentRoom }) => {
       alert('You are not in any room.');
       return;
     }
-    socket.emit('leave room', currentRoom);
+
+    // Send a message to leave the room
+    const message = JSON.stringify({ type: 'leave room', payload: currentRoom });
+    socket.send(message);
     setCurrentRoom(null);
   };
 
